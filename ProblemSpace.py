@@ -1,8 +1,10 @@
+from Node import Node
+
 class Problem:
     def __init__(self):
         self.initState = []
-        self.goalState = [[1,2,3], [4,5,6],[7,8,0]]
-        self.actions = []
+        self.goalState = [['1','2','3'], ['4','5','6'], ['7','8','0']]
+        self.actions = ['blank_up', 'blank_down', 'blank_left', 'blank_right']
 
     # Checks if the argument s is the goal state
     def isGoal(self, s):
@@ -13,11 +15,14 @@ class Problem:
 
     # Sets the initial state to the argument s
     def setInit(self, s):
-        for i in range(len(s)):
-            new = []
-            for j in range(len(s[0])):
-                new.append(s[i][j])
-            self.initState.append(new)
+        for row in s:
+            r = []
+            for item in row:
+                r.append(item)
+            self.initState.append(r)
+
+    def getInit(self):
+        return self.initState
 
     # Print the puzzle information for a current state
     def printState(self, s):
@@ -25,3 +30,81 @@ class Problem:
             for j in range(len(s[0])):
                 print(s[i][j], end=' ')
             print()
+
+    def expand(self, node):
+        # return list of expanded nodes
+        # expansion = []
+        # check transition(node, a) for each action a, if transition returns valid state add it to expansion
+        # return expansion
+        expansion = []
+        for a in self.actions:
+            if not(self.transition(node, a) == None):
+                n = Node()
+                node.addChild(n)
+                n.setG(node.getG() + 1)     # Can do - 1 for DFS
+                n.setState(self.transition(node, a))
+                expansion.append(n)
+        return expansion
+
+    def transition(self, node, action):
+        # return result of state taking action, or 0 if returning bad state
+        state = []
+        for row in node.getState():
+            new = []
+            for item in row:
+                new.append(item)
+            state.append(new)
+        
+        blankPos = None
+        for i in range(len(state)):
+            for j in range(len(state[0])):
+                if state[i][j] == '0':
+                    blankPos = i*3 + j
+                    # Up
+                    if action == self.actions[0]:
+                        if blankPos > 2:
+                            char = state[i-1][j]
+                            state[i-1][j] = '0'
+                            state[i][j] = char
+                            return state
+                        else:
+                            return None
+
+                    # Down
+                    elif action == self.actions[1]:
+                        if blankPos < 6:
+                            char = state[i+1][j]
+                            state[i+1][j] = '0'
+                            state[i][j] = char
+                            return state
+                        else:
+                            return None
+
+                    # Left
+                    elif action == self.actions[2]:
+                        if not(blankPos%3 == 0):
+                            char = state[i][j-1]
+                            state[i][j-1] = '0'
+                            state[i][j] = char
+                            return state
+                        else:
+                            return None
+
+                    #Right
+                    elif action == self.actions[3]:
+                        if not(blankPos==2) and not(blankPos==5) and not(blankPos==8):
+                            char = state[i][j+1]
+                            state[i][j+1] = '0'
+                            state[i][j] = char
+                            return state
+                        else:
+                            return None
+                    else:
+                        return None
+        return state
+
+    def misplacedTiles(self, node):
+        pass
+
+    def euclideanDist(self, node):
+        pass
