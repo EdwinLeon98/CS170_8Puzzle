@@ -5,6 +5,7 @@ class Problem:
         self.initState = []
         self.goalState = [['1','2','3'], ['4','5','6'], ['7','8','0']]
         self.actions = ['blank_up', 'blank_down', 'blank_left', 'blank_right']
+        self.solution = []
 
     # Checks if the argument s is the goal state
     def isGoal(self, s):
@@ -31,7 +32,7 @@ class Problem:
                 print(s[i][j], end=' ')
             print()
 
-    def expand(self, node):
+    def expandUCS(self, node):
         # return list of expanded nodes
         # expansion = []
         # check transition(node, a) for each action a, if transition returns valid state add it to expansion
@@ -41,7 +42,39 @@ class Problem:
             if not(self.transition(node, a) == None):
                 n = Node()
                 node.addChild(n)
-                n.setG(node.getG() + 1)     # Can do - 1 for DFS
+                n.setG(node.getG() + 1)
+                n.setState(self.transition(node, a))
+                expansion.append(n)
+        return expansion
+
+    def expandA1(self, node):
+        # return list of expanded nodes
+        # expansion = []
+        # check transition(node, a) for each action a, if transition returns valid state add it to expansion
+        # return expansion
+        expansion = []
+        for a in self.actions:
+            if not(self.transition(node, a) == None):
+                n = Node()
+                node.addChild(n)
+                n.setH(node.misplacedTiles())
+                n.setG(node.getG() + 1)
+                n.setState(self.transition(node, a))
+                expansion.append(n)
+        return expansion
+
+    def expandA2(self, node):
+        # return list of expanded nodes
+        # expansion = []
+        # check transition(node, a) for each action a, if transition returns valid state add it to expansion
+        # return expansion
+        expansion = []
+        for a in self.actions:
+            if not(self.transition(node, a) == None):
+                n = Node()
+                node.addChild(n)
+                n.setH(node.euclideanDist())
+                n.setG(node.getG() + 1)
                 n.setState(self.transition(node, a))
                 expansion.append(n)
         return expansion
@@ -103,8 +136,10 @@ class Problem:
                         return None
         return state
 
-    def misplacedTiles(self, node):
-        pass
-
-    def euclideanDist(self, node):
-        pass
+    def traceBack(self, node):
+        self.solution = []
+        tmp = node
+        while not(tmp.getParent() == None):
+            self.solution.append(tmp.getParent())
+            tmp = tmp.getParent()
+        return self.solution
