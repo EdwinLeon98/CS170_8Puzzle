@@ -10,8 +10,9 @@ p.printState(p.getInit())
 
 # Uniform Cost Search
 count = 0
+maxQ = 1
 if algo == '1':
-
+    
     # Create node for initial state
     initNode = Node()
     initNode.setG(0)
@@ -20,15 +21,19 @@ if algo == '1':
     # Put initial state node into frontier
     frontier = []
     heapq.heappush(frontier, initNode)
-
+    
     # Initialize explored set to empty set
     explored = set()
 
     found = False
     while not found:
         if len(frontier) == 0:
-            sys.exit('Error, frontier is empty')
+            print('Number of nodes expanded is ' + str(count))
+            print('The maximum number of nodes in the queue at any one time: ' + str(maxQ))
+            sys.exit('Frontier is empty')
         leaf = heapq.heappop(frontier)
+        if maxQ < len(frontier):
+            maxQ = len(frontier)
 
         # If node contains a goal state return
         if p.isGoal(leaf.getState()):
@@ -39,6 +44,8 @@ if algo == '1':
                 p.printState(solution[i].getState())
             print('The best state to expand with g(n) = {} and h(n) = {} is...\n'.format(leaf.getG(), leaf.getH()))
             p.printState(leaf.getState())
+            print('Number of nodes expanded is ' + str(count))
+            print('The maximum number of nodes in the queue at any one time: ' + str(maxQ))
             sys.exit('Solution found in ' + str(len(p.traceBack(leaf))) + ' moves')
         
         # Add node to explored
@@ -46,10 +53,11 @@ if algo == '1':
         
         # Expand node adding results to frontier if new
         nodes = p.expandUCS(leaf)
-        count += 1
+        
         for item in nodes:
             if not(item in frontier) and not(item in explored):
                 heapq.heappush(frontier, item)
+                count += 1
             else:
                 pass
 
@@ -71,8 +79,12 @@ elif algo == '2':
     found = False
     while not found:
         if len(frontier) == 0:
+            print('Number of nodes expanded is ' + str(count))
+            print('The maximum number of nodes in the queue at any one time: ' + str(maxQ))
             sys.exit('Error, frontier is empty')
         leaf = heapq.heappop(frontier)
+        if maxQ < len(frontier):
+            maxQ = len(frontier)
 
         # If node contains a goal state return
         if p.isGoal(leaf.getState()):
@@ -83,6 +95,8 @@ elif algo == '2':
                 p.printState(solution[i].getState())
             print('The best state to expand with g(n) = {} and h(n) = {} is...\n'.format(leaf.getG(), leaf.getH()))
             p.printState(leaf.getState())
+            print('Number of nodes expanded is ' + str(count))
+            print('The maximum number of nodes in the queue at any one time: ' + str(maxQ))
             sys.exit('Solution found in ' + str(len(p.traceBack(leaf))) + ' moves')
         
         # Add node to explored
@@ -90,10 +104,11 @@ elif algo == '2':
         
         # Expand node adding results to frontier if new
         nodes = p.expandA1(leaf)
-        count += 1
+        
         for item in nodes:
             if not(item in frontier) and not(item in explored):
                 heapq.heappush(frontier, item)
+                count += 1
             else:
                 pass
 
@@ -115,8 +130,12 @@ elif algo == '3':
     found = False
     while not found:
         if len(frontier) == 0:
+            print('Number of nodes expanded is ' + str(count))
+            print('The maximum number of nodes in the queue at any one time: ' + str(maxQ))
             sys.exit('Error, frontier is empty')
         leaf = heapq.heappop(frontier)
+        if maxQ < len(frontier):
+            maxQ = len(frontier)
 
         # If node contains a goal state return
         if p.isGoal(leaf.getState()):
@@ -127,6 +146,8 @@ elif algo == '3':
                 p.printState(solution[i].getState())
             print('The best state to expand with g(n) = {} and h(n) = {} is...\n'.format(leaf.getG(), leaf.getH()))
             p.printState(leaf.getState())
+            print('Number of nodes expanded is ' + str(count))
+            print('The maximum number of nodes in the queue at any one time: ' + str(maxQ))
             sys.exit('Solution found in ' + str(len(p.traceBack(leaf))) + ' moves')
         
         # Add node to explored
@@ -134,9 +155,10 @@ elif algo == '3':
         
         # Expand node adding results to frontier if new
         nodes = p.expandA2(leaf)
-        count += 1
         for item in nodes:
+            
             if not(item in frontier) and not(item in explored):
                 heapq.heappush(frontier, item)
+                count += 1
             else:
                 pass

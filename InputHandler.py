@@ -4,14 +4,14 @@ from ProblemSpace import Problem
 def getPuzzle():
     default = []
     
-    print('Welcome to the 8 puzzle solver created by 862054277 and XXX.')
+    print('Welcome to the 8 puzzle solver created by 862054277 and 862132870.')
     print('Authors: Josh McIntyre and Edwin Leon')
     invalidPuzzle = True
     while invalidPuzzle:
         puzzleChoice = input('Type "1" to use a default puzzle, or "2" to enter your own puzzle: ')
         # Default puzzle input
         if puzzleChoice == '1':
-            default = [['1','2','3'], ['4','8','0'], ['7','6','5']]
+            default = [['8','7','1'], ['6','0','2'], ['5','4','3']]
             invalidPuzzle = False
 
         # Custom puzzle input
